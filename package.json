@@ -1,0 +1,19 @@
+{
+  "name": "industria-backend",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "@nestjs/common": "^6.11.11",
+    "@nestjs/core": "^6.11.11",
+    "@nestjs/platform-express": "^6.11.11",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "mysql2": "^2.3.3",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^6.6.7",
+    "sequelize": "^5.22.5"
+  }
+}
