@@ -25,12 +25,12 @@ const Company = sequelize.define('company', {
   },
 
   branches: {
-    type: Sequelize.JSON,
+    type: Sequelize.TEXT,
     allowNull: true
   },
 
   socialLinks: {
-    type: Sequelize.JSON,
+    type: Sequelize.TEXT,
     allowNull: true
   }
 
