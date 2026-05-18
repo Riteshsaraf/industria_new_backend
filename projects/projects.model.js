@@ -39,7 +39,7 @@ const Project = sequelize.define('projects', {
   }
 
 }, {
-  timestamps: true
+  timestamps: false
 });
 
 module.exports = Project;

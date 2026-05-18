@@ -24,7 +24,7 @@ const Client = sequelize.define('clients', {
   }
 
 }, {
-  timestamps: true
+  timestamps: false
 });
 
 module.exports = Client;
