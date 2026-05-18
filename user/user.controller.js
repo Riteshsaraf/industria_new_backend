@@ -123,7 +123,7 @@ router.delete('/:id', async (req, res) => {
 // =====================
 // LOGIN
 // =====================
-router.post('/login', validate(loginUserDto), async (req, res) => {
+router.post('/admin_login', validate(loginUserDto), async (req, res) => {
 
   try {
 
