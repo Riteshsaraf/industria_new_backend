@@ -39,12 +39,22 @@ app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 |--------------------------------------------------------------------------
 */
 
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:3001",
+  "https://reactfront.industriamovies.com"
+];
+
+
 app.use(function(req, res, next) {
 
-  res.header(
-    "Access-Control-Allow-Origin",
-    "http://localhost:3000"
-  );
+   const origin = req.headers.origin;
+
+  // check if request origin is allowed
+  if (allowedOrigins.includes(origin)) {
+    res.header("Access-Control-Allow-Origin", origin);
+  }
+
 
   res.header(
     "Access-Control-Allow-Credentials",
