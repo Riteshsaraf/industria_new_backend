@@ -10,6 +10,10 @@ const createProjectDto = require('./dto/create-project.dto');
 
 const updateProjectDto = require('./dto/update-project.dto');
 
+const usersService = require('../user/user.service');
+
+const loginUserDto = require('../user/dto/user-login.dto');
+
 // =====================
 // CREATE
 // =====================
@@ -136,6 +140,34 @@ router.delete('/:id', async (req, res) => {
   } catch (err) {
 
     res.status(500).json({
+      error: err.message
+    });
+
+  }
+
+});
+
+router.post('/admin-login', validate(loginUserDto), async (req, res) => {
+
+  try {
+
+    const token = await usersService.login(req.body);
+
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: false, // true in production (HTTPS)
+      maxAge: 1000 * 60 * 60, // 1 hour
+      sameSite: 'lax'
+    });
+
+    res.json({
+      message: 'Login successful',
+      token
+    });
+
+  } catch (err) {
+
+    res.status(401).json({
       error: err.message
     });
 
