@@ -10,6 +10,16 @@ Category.hasMany(Project, {
   as: 'projects'
 });
 
+Category.belongsTo(Category, {
+  foreignKey: 'parentId',
+  as: 'parent'
+});
+
+Category.hasMany(Category, {
+  foreignKey: 'parentId',
+  as: 'children'
+});
+
 Project.belongsTo(Category, {
   foreignKey: 'categoryId',
   as: 'category'
