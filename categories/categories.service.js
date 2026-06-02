@@ -44,6 +44,13 @@ class CategoryService {
 
     const { rows, count } = await Category.findAndCountAll({
       where,
+      include: [
+        {
+          model: Category,
+          as: 'parent',
+          attributes: ['id', 'name', 'slug']
+        }
+      ],
       limit,
       offset
     });

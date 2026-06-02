@@ -20,7 +20,9 @@ class ProjectsService {
 
     const page = parseInt(query.page) || 1;
     const limit = parseInt(query.limit) || 10;
+    const slug = query.slug!=='null' ? query.slug : null;
     const search = query.search || '';
+    const whereSlug = slug!==null ? { slug } : {};
 
     const offset = (page - 1) * limit;
 
@@ -32,12 +34,16 @@ class ProjectsService {
         }
       : {};
 
+
+    console.log('🔍 Searching projects with:', { page, limit, slug, search });  
+
     const { rows, count } = await Project.findAndCountAll({
       where,
       include: [
         {
           model: Category,
-          as: 'category'
+          as: 'category',
+          where: whereSlug,
         }
       ],
       limit,
