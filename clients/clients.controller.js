@@ -25,7 +25,7 @@ router.post('/', validate(createClientDto), async (req, res) => {
 
     // base64 image handling (same as NestJS logic)
     if (dto.image) {
-      const fileName = await imageService.saveBase64Image(dto.image);
+      const fileName = await imageService.saveBase64Image(dto.image, false);
       dto.image = fileName;
     }
 
@@ -101,9 +101,20 @@ router.patch('/:id', validate(updateClientDto), async (req, res) => {
 
   try {
 
+
+     const dto = { ...req.body };
+
+    // base64 image handling (same as NestJS logic)
+    if (dto.image) {
+      const fileName = await imageService.saveBase64Image(dto.image, false);
+      dto.image = fileName;
+    }
+
+    console.log({updatedDTO : dto});
+
     const client = await clientService.update(
       req.params.id,
-      req.body
+      dto
     );
 
     res.json(client);
