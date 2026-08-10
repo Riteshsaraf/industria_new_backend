@@ -18,13 +18,19 @@ const Client = sequelize.define('clients', {
     allowNull: true
   },
 
+  type:{
+    type: Sequelize.ENUM('desktop', 'mobile'),
+    allowNull: false,
+    defaultValue: 'desktop'
+  },
+
   image: {
     type: Sequelize.STRING,
     allowNull: true
   }
 
 }, {
-  timestamps: false
+  timestamps: true
 });
 
 module.exports = Client;

@@ -79,7 +79,7 @@ router.get('/:id', async (req, res) => {
 
 
 // UPDATE
-router.put('/:id', validate(updateCategoryDto), async (req, res) => {
+router.patch('/:id', validate(updateCategoryDto), async (req, res) => {
 
   try {
 
