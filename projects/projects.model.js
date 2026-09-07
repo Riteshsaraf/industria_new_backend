@@ -29,17 +29,24 @@ const Project = sequelize.define('projects', {
   },
 
   categoryId: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.JSON,
     allowNull: false,
-    references: {
-      model: 'categories', // table name
-      key: 'id'
-    },
-    onDelete: 'CASCADE'
+    defaultValue: []
+  },
+  year:{
+    type: Sequelize.TEXT,
+    allowNull: true,
+  },
+  client:{
+    type: Sequelize.TEXT,
+    allowNull: true,    
+  },
+  mainCategory:{
+    type: Sequelize.TEXT,
+    allowNull: true,
   }
-
 }, {
-  timestamps: false
+  timestamps: true
 });
 
 module.exports = Project;

@@ -59,6 +59,70 @@ class ImageService {
 
     return fileName;
   }
+
+  async saveImageFromUrl(url, resize = true) {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(
+        `Failed to download image: ${response.status} ${response.statusText}`
+      );
+    }
+
+    const contentType = response.headers.get("content-type");
+
+    if (!contentType || !contentType.startsWith("image/")) {
+      throw new Error("URL does not point to an image");
+    }
+
+    const buffer = Buffer.from(await response.arrayBuffer());
+
+    const uploadPath = path.join(process.cwd(), "uploads");
+
+    if (!fs.existsSync(uploadPath)) {
+      fs.mkdirSync(uploadPath, { recursive: true });
+    }
+
+    // SVG
+    if (contentType.includes("svg")) {
+      const fileName = `${uuidv4()}.svg`;
+      const filePath = path.join(uploadPath, fileName);
+
+      fs.writeFileSync(filePath, buffer);
+
+      return fileName;
+    }
+
+    // Determine extension
+    let extension = "jpg";
+
+    if (contentType.includes("png")) {
+      extension = "png";
+    } else if (contentType.includes("webp")) {
+      extension = "webp";
+    } else if (contentType.includes("gif")) {
+      extension = "gif";
+    }
+
+    const fileName = `${uuidv4()}.${extension}`;
+    const filePath = path.join(uploadPath, fileName);
+
+    if (resize) {
+      const image = await Jimp.read(buffer);
+
+      image.resize(1024, Jimp.AUTO);
+
+      if (extension === "jpg") {
+        image.quality(75);
+      }
+
+      await image.writeAsync(filePath);
+    } else {
+      fs.writeFileSync(filePath, buffer);
+    }
+
+    return fileName;
+  }
 }
 
 module.exports = new ImageService();

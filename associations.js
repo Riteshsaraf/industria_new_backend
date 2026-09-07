@@ -5,10 +5,10 @@ const Project = require('./projects/projects.model');
 // Category ↔ Project
 // =====================
 
-Category.hasMany(Project, {
-  foreignKey: 'categoryId',
-  as: 'projects'
-});
+// Category.hasMany(Project, {
+//   foreignKey: 'categoryId',
+//   as: 'projects'
+// });
 
 Category.belongsTo(Category, {
   foreignKey: 'parentId',
@@ -20,10 +20,10 @@ Category.hasMany(Category, {
   as: 'children'
 });
 
-Project.belongsTo(Category, {
-  foreignKey: 'categoryId',
-  as: 'category'
-});
+// Project.belongsTo(Category, {
+//   foreignKey: 'categoryId',
+//   as: 'category'
+// });
 
 module.exports = {
   Category,

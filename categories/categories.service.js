@@ -1,4 +1,4 @@
-const { Op } = require('sequelize');
+const { Op, fn, col, where } = require("sequelize");
 const Category = require('./categories.model');
 
 class CategoryService {
@@ -96,6 +96,23 @@ class CategoryService {
     return await Category.destroy({
       where: { id }
     });
+  }
+
+  async getIdsByNames(names) {
+     const normalizedNames = names.map(
+      name => name.trim().toLowerCase()
+    );
+
+    const categories = await Category.findAll({
+      where: where(
+        fn("LOWER", col("name")),
+        {
+          [Op.in]: normalizedNames
+        }
+      )
+    });
+
+    return categories.map(category => {return { id: category.id ,name : category.name}});
   }
 }
 
