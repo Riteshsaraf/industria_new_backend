@@ -12,6 +12,30 @@ class ProjectsService {
     return await Project.create(data);
   }
 
+  // =====================
+  // HELPER
+  // =====================
+  getCategoryIds(categoryId) {
+
+    if (!categoryId) {
+      return [];
+    }
+
+    // If categoryId is already an array
+    if (Array.isArray(categoryId)) {
+      return categoryId
+        .map(Number)
+        .filter(Boolean);
+    }
+
+    // If categoryId is stored as comma-separated string
+    return String(categoryId)
+      .split(',')
+      .map(Number)
+      .filter(Boolean);
+
+  }
+
 
   // =====================
   // READ ALL
@@ -122,12 +146,16 @@ class ProjectsService {
     // =====================
     const allCategoryIds = [
       ...new Set(
-        paginatedProjects.flatMap(project =>
-          project.categoryId || []
-        )
+        paginatedProjects.reduce((ids, project) => {
+
+          const categoryIds =
+            this.getCategoryIds(project.categoryId);
+
+          return ids.concat(categoryIds);
+
+        }, [])
       )
     ];
-
 
     // =====================
     // GET CATEGORIES
