@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const { v4: uuidv4 } = require("uuid");
 const Jimp = require("jimp");
+const axios = require("axios");
 
 class ImageService {
   async saveBase64Image(base64, resize = true) {
@@ -61,21 +62,17 @@ class ImageService {
   }
 
   async saveImageFromUrl(url, resize = true) {
-    const response = await fetch(url);
+    const response = await axios.get(url, {
+      responseType: "arraybuffer"
+    });
 
-    if (!response.ok) {
-      throw new Error(
-        `Failed to download image: ${response.status} ${response.statusText}`
-      );
-    }
-
-    const contentType = response.headers.get("content-type");
+    const contentType = response.headers["content-type"];
 
     if (!contentType || !contentType.startsWith("image/")) {
       throw new Error("URL does not point to an image");
     }
 
-    const buffer = Buffer.from(await response.arrayBuffer());
+    const buffer = Buffer.from(response.data);
 
     const uploadPath = path.join(process.cwd(), "uploads");
 
@@ -93,7 +90,6 @@ class ImageService {
       return fileName;
     }
 
-    // Determine extension
     let extension = "jpg";
 
     if (contentType.includes("png")) {
