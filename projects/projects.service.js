@@ -193,7 +193,7 @@ class ProjectsService {
 
     const projectJson = project.toJSON();
 
-    const categoryIds = project.categoryId || [];
+    const categoryIds = project.categoryId ? project.categoryId.split(',') : [];
 
 
     // =====================

@@ -29,9 +29,9 @@ const Project = sequelize.define('projects', {
   },
 
   categoryId: {
-    type: Sequelize.JSON,
+    type: Sequelize.STRING,
     allowNull: false,
-    defaultValue: []
+    defaultValue: ''
   },
   year:{
     type: Sequelize.TEXT,

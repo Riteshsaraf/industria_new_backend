@@ -105,7 +105,7 @@ router.post('/import-excel', upload.single('file'), async (req, res) => {
         const categoryNames = dto.category.split(',').map(name => name.trim().toLowerCase());
         const categoryIds = categoryIdsWithNames.filter(cat => categoryNames.includes(cat.name.toLowerCase())).map(cat => cat.id);
 
-        dto.categoryId = categoryIds;
+        dto.categoryId = categoryIds.join(','); // Convert array to comma-separated string
         delete dto.category; // Remove the original categoryNames field if needed
       }
 
@@ -147,6 +147,10 @@ router.post('/', validate(createProjectDto), async (req, res) => {
     if (dto.thumbnail) {
       const fileName = await imageService.saveBase64Image(dto.thumbnail);
       dto.thumbnail = fileName;
+    }
+
+    if(dto.categoryId && dto.categoryId.length > 0) {
+      dto.categoryId = dto.categoryId.join(','); // Convert array to comma-separated string
     }
 
     const project = await projectsService.create(dto);
@@ -201,6 +205,14 @@ router.get('/:id', async (req, res) => {
       });
     }
 
+    if(project.categoryId) {
+
+      console.log('Project categoryId:', project.categoryId);
+
+      const categoryIds = project.categoryId.split(',').map(id => parseInt(id, 10));
+      project.categoryId = categoryIds;
+    }
+
     res.json(project);
 
   } catch (err) {
@@ -227,6 +239,10 @@ router.patch('/:id', validate(updateProjectDto), async (req, res) => {
     if (dto.thumbnail) {
       const fileName = await imageService.saveBase64Image(dto.thumbnail);
       dto.thumbnail = fileName;
+    }
+
+    if(dto.categoryId && dto.categoryId.length > 0) {
+      dto.categoryId = dto.categoryId.join(','); // Convert array to comma-separated string
     }
 
     const project = await projectsService.update(req.params.id, dto);

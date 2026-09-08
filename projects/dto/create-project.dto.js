@@ -5,7 +5,7 @@ module.exports = Joi.object({
   thumbnail: Joi.string().optional().allow(null, ''),
   videoLink: Joi.string().optional().allow(null, ''),
   description: Joi.string().optional().allow(null, ''),
-  categoryIds: Joi.array()
+  categoryId: Joi.array()
     .items(Joi.number().integer().positive())
     .min(1)
     .required(),
