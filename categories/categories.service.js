@@ -30,7 +30,8 @@ class CategoryService {
 
     const page = parseInt(query.page) || 1;
     const limit = parseInt(query.limit) || 10;
-    const search = query.search || '';
+    const search = query.search!=='null' &&  query.search!=='undefined' ? query.search :'';
+
 
     const offset = (page - 1) * limit;
 
@@ -52,7 +53,8 @@ class CategoryService {
         }
       ],
       limit,
-      offset
+      offset,
+      order: [['name', 'DESC']]
     });
 
     return {

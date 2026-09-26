@@ -5,6 +5,7 @@ require('./associations');
 const express = require('express');
 const bodyParser = require('body-parser');
 const sequelize = require('./database');
+const cookieParser = require('cookie-parser');
 
 const path = require('path');
 
@@ -24,7 +25,10 @@ const userController =
   require('./user/user.controller');  
 
   
+  
 const app = express();
+
+app.use(cookieParser());
 
 // increase limit
 app.use(express.json({ limit: "50mb" }));

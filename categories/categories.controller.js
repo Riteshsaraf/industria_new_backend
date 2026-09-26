@@ -4,14 +4,16 @@ const router = express.Router();
 
 const categoryService = require('./categories.service');
 
-const validate = require('../middlewares/validate');
+const validate = require('../middleware/validate');
 
 const createCategoryDto = require('./dto/create-category.dto');
 
 const updateCategoryDto = require('./dto/update-category.dto');
 
+const authMiddleware = require('../middleware/authMiddleware');
+
 // CREATE
-router.post('/', validate(createCategoryDto), async (req, res) => {
+router.post('/', authMiddleware, validate(createCategoryDto), async (req, res) => {
 
   try {
 
@@ -79,7 +81,7 @@ router.get('/:id', async (req, res) => {
 
 
 // UPDATE
-router.patch('/:id', validate(updateCategoryDto), async (req, res) => {
+router.patch('/:id', authMiddleware, validate(updateCategoryDto), async (req, res) => {
 
   try {
 
@@ -102,7 +104,7 @@ router.patch('/:id', validate(updateCategoryDto), async (req, res) => {
 
 
 // DELETE
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authMiddleware, async (req, res) => {
 
   try {
 

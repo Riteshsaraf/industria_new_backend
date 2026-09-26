@@ -4,9 +4,11 @@ const router = express.Router();
 const usersService = require('./user.service');
 
 
-const validate = require('../middlewares/validate');
+const validate = require('../middleware/validate');
 
 const loginUserDto = require('./dto/user-login.dto');
+
+const authMiddleware = require('../middleware/authMiddleware');
 
 // =====================
 // CREATE USER
@@ -123,7 +125,7 @@ router.delete('/:id', async (req, res) => {
 // =====================
 // LOGIN
 // =====================
-router.post('/admin_login', validate(loginUserDto), async (req, res) => {
+router.post('/admin-login', validate(loginUserDto), async (req, res) => {
 
   try {
 
@@ -150,5 +152,8 @@ router.post('/admin_login', validate(loginUserDto), async (req, res) => {
   }
 
 });
+
+
+
 
 module.exports = router;

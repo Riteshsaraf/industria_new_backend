@@ -8,7 +8,7 @@ const imageService = require('../services/image.service');
 
 const categoriesService = require('../categories/categories.service');
 
-const validate = require('../middlewares/validate');
+const validate = require('../middleware/validate');
 
 const createProjectDto = require('./dto/create-project.dto');
 
@@ -17,6 +17,8 @@ const updateProjectDto = require('./dto/update-project.dto');
 const usersService = require('../user/user.service');
 
 const loginUserDto = require('../user/dto/user-login.dto');
+
+const authMiddleware = require('../middleware/authMiddleware');
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -39,10 +41,86 @@ const upload = multer({
 });
 
 
+
+router.post('/admin-login', validate(loginUserDto), async (req, res) => {
+
+  try {
+
+    const token = await usersService.login(req.body);
+
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: false, // true in production (HTTPS)
+      maxAge: 1000 * 60 * 60, // 1 hour
+      sameSite: 'lax'
+    });
+
+    res.json({
+      message: 'Login successful',
+      token
+    });
+
+  } catch (err) {
+
+    res.status(401).json({
+      error: err.message
+    });
+
+  }
+
+});
+
+router.get('/admin-me', authMiddleware, async (req, res) => {
+
+  try {
+
+    // req.user came from jwt.verify()
+    const user = await usersService.findOne(req.user.userId);
+
+    res.json({
+      user
+    });
+
+  } catch (err) {
+
+    res.status(401).json({
+      error: 'Unauthorized'
+    });
+
+  }
+
+});
+
+
+router.post('/admin-logout', (req, res) => {
+
+  try {
+
+    res.clearCookie('token', {
+      httpOnly: true,
+      secure: false, // true in production with HTTPS
+      sameSite: 'lax',
+    });
+
+    res.json({
+      message: 'Logout successful',
+    });
+
+  } catch (err) {
+
+    res.status(500).json({
+      error: 'Logout failed',
+    });
+
+  }
+
+});
+
+
 // =====================
 // IMPORT PROJECTS FROM EXCEL
 // =====================
-router.post('/import-excel', upload.single('file'), async (req, res) => {
+router.post('/import-excel',authMiddleware, upload.single('file'), async (req, res) => {
 
   try {
 
@@ -137,7 +215,7 @@ router.post('/import-excel', upload.single('file'), async (req, res) => {
 // =====================
 // CREATE
 // =====================
-router.post('/', validate(createProjectDto), async (req, res) => {
+router.post('/', authMiddleware, validate(createProjectDto), async (req, res) => {
 
   try {
 
@@ -229,7 +307,7 @@ router.get('/:id', async (req, res) => {
 // =====================
 // UPDATE
 // =====================
-router.patch('/:id', validate(updateProjectDto), async (req, res) => {
+router.patch('/:id', authMiddleware, validate(updateProjectDto), async (req, res) => {
 
   try {
 
@@ -263,7 +341,7 @@ router.patch('/:id', validate(updateProjectDto), async (req, res) => {
 // =====================
 // DELETE
 // =====================
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authMiddleware, async (req, res) => {
 
   try {
 
@@ -276,34 +354,6 @@ router.delete('/:id', async (req, res) => {
   } catch (err) {
 
     res.status(500).json({
-      error: err.message
-    });
-
-  }
-
-});
-
-router.post('/admin-login', validate(loginUserDto), async (req, res) => {
-
-  try {
-
-    const token = await usersService.login(req.body);
-
-    res.cookie('token', token, {
-      httpOnly: true,
-      secure: false, // true in production (HTTPS)
-      maxAge: 1000 * 60 * 60, // 1 hour
-      sameSite: 'lax'
-    });
-
-    res.json({
-      message: 'Login successful',
-      token
-    });
-
-  } catch (err) {
-
-    res.status(401).json({
       error: err.message
     });
 

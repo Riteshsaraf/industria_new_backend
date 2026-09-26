@@ -5,15 +5,16 @@ const companyService = require('./company.service');
 const imageService = require('../services/image.service');
 
 
-const validate = require('../middlewares/validate');
+const validate = require('../middleware/validate');
 
 const createCompanyDto = require('./dto/create-company.dto');
 
+const authMiddleware = require('../middleware/authMiddleware');
 
 // =====================
 // CREATE
 // =====================
-router.post('/', validate(createCompanyDto), async (req, res) => {
+router.post('/', authMiddleware, validate(createCompanyDto), async (req, res) => {
 
   try {
 
@@ -93,7 +94,7 @@ router.get('/:name', async (req, res) => {
 // =====================
 // DELETE
 // =====================
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authMiddleware, async (req, res) => {
 
   try {
 

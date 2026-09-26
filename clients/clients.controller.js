@@ -5,19 +5,19 @@ const clientService = require('./clients.service');
 const imageService = require('../services/image.service');
 
 
-const validate = require('../middlewares/validate');
+const validate = require('../middleware/validate');
 
 const createClientDto = require('./dto/create-client.dto');
 
 const updateClientDto = require('./dto/update-client.dto');
 
-
+const authMiddleware = require('../middleware/authMiddleware');
 
 
 // =====================
 // CREATE
 // =====================
-router.post('/', validate(createClientDto), async (req, res) => {
+router.post('/',authMiddleware, validate(createClientDto), async (req, res) => {
 
   try {
 
@@ -97,7 +97,7 @@ router.get('/:id', async (req, res) => {
 // =====================
 // UPDATE
 // =====================
-router.patch('/:id', validate(updateClientDto), async (req, res) => {
+router.patch('/:id', authMiddleware, validate(updateClientDto), async (req, res) => {
 
   try {
 
@@ -133,7 +133,7 @@ router.patch('/:id', validate(updateClientDto), async (req, res) => {
 // =====================
 // DELETE
 // =====================
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authMiddleware, async (req, res) => {
 
   try {
 

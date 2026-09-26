@@ -9,6 +9,21 @@ class ProjectsService {
   // CREATE
   // =====================
   async create(data) {
+    // Check if project already exists by title
+    const existingProject = await Project.findOne({
+      where: {
+        title: data.title
+      }
+    });
+
+    // If exists → update
+    if (existingProject) {
+      await existingProject.update(data);
+
+      return await this.findOne(existingProject.id);
+    }
+
+    // If not exists → create
     return await Project.create(data);
   }
 
@@ -46,7 +61,7 @@ class ProjectsService {
     const limit = parseInt(query.limit) || 10;
 
     const slug = query.slug !== 'null' ? query.slug : null;
-    const search = query.search || '';
+    const search = query.search!=='null' &&  query.search!=='undefined' ? query.search :'';
 
     const offset = (page - 1) * limit;
 
@@ -108,7 +123,7 @@ class ProjectsService {
     // =====================
     const { rows: projects } = await Project.findAndCountAll({
       where,
-      order: [['id', 'DESC']]
+      order: [['updatedAt', 'DESC']]
     });
 
 
