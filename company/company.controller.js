@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const companyService = require('./company.service');
+const projectService = require('./../projects/projects.service');
 const imageService = require('../services/image.service');
 
 
@@ -62,6 +63,47 @@ router.get('/', async (req, res) => {
 
 });
 
+
+// =====================
+// READ ALL Home Page required detail
+// =====================
+router.get('/home', async (req, res) => {
+
+  try {
+
+    const homeDetails = await projectService.findHomeDetail();
+
+    res.json(homeDetails);
+
+  } catch (err) {
+
+    res.status(500).json({
+      error: err.message
+    });
+
+  }
+});
+
+
+// =====================
+// READ ALL Social links  detail
+// =====================
+router.get('/social-info', async (req, res) => {
+
+  try {
+
+    const companyDetails = await projectService.findSocialLinks();
+
+    res.json(companyDetails);
+
+  } catch (err) {
+
+    res.status(500).json({
+      error: err.message
+    });
+
+  }
+});
 
 // =====================
 // READ ONE (by name)

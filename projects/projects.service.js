@@ -2,6 +2,7 @@ const { Op } = require('sequelize');
 
 const Project = require('./projects.model');
 const Category = require('../categories/categories.model');
+const Company = require('../company/company.model');
 
 class ProjectsService {
 
@@ -218,6 +219,77 @@ class ProjectsService {
     };
   }
 
+
+  async findHomeDetail(){
+
+    const { rows: projects } = await Project.findAndCountAll({
+      limit:6,
+      order: [['updatedAt', 'DESC']]
+    });
+
+   // GET ALL CATEGORY IDS
+    // =====================
+    const allCategoryIds = [
+      ...new Set(
+        projects.reduce((ids, project) => {
+
+          const categoryIds =
+            this.getCategoryIds(project.categoryId);
+
+          return ids.concat(categoryIds);
+
+        }, [])
+      )
+    ];
+
+    // =====================
+    // GET CATEGORIES
+    // =====================
+    let categories = [];
+
+    if (allCategoryIds.length) {
+
+      categories = await Category.findAll({
+        where: {
+          id: {
+            [Op.in]: allCategoryIds
+          }
+        }
+      });
+    }
+
+
+    // =====================
+    // ADD CATEGORY TO PROJECT
+    // =====================
+    const data = projects.map(project => {
+
+      const projectJson = project.toJSON();
+
+      projectJson.category = categories.filter(category =>
+        (project.categoryId || []).includes(category.id)
+      );
+
+      return projectJson;
+    });
+
+
+    const companyInfo = await Company.findOne({});
+
+    return {
+      projects : data,
+      companyInfo
+    }
+  }
+
+  async findSocialLinks(){
+
+    const companyInfo = await Company.findOne({});
+
+    return {
+      companyInfo
+    }
+  }
 
   // =====================
   // READ ONE
