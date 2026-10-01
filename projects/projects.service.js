@@ -134,15 +134,17 @@ class ProjectsService {
     let filteredProjects = projects;
 
     if (categoryIdsForFilter.length) {
+     
+      filteredProjects = projects.filter(project => {
 
-     filteredProjects = projects.filter(project => {
-
-        const projectCategoryIds = project.categoryId?.split(',').map(Number) || [];
+        let projectCategoryIds = project.categoryId?.split(',') || [];
+        projectCategoryIds = projectCategoryIds.map(Number);
 
         return categoryIdsForFilter.filter((categoryId) =>
           projectCategoryIds.indexOf(Number(categoryId)) !== -1
         ).length;
       });
+      
     }
 
 
