@@ -104,6 +104,18 @@ class ProjectsService {
 
       categoryIdsForFilter = categories.map(category => Number(category.id));
 
+      // Find category using slug
+      const subCategories = await Category.findAll({
+        where: {
+          parentId: {
+            [Op.in]: categoryIdsForFilter
+          }
+        },
+        attributes: ['id']
+      });
+
+      categoryIdsForFilter = categoryIdsForFilter.concat(subCategories.map(category => Number(category.id)));
+
       // No category found
       if (!categoryIdsForFilter.length) {
         return {
