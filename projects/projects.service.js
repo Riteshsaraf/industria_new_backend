@@ -137,10 +137,10 @@ class ProjectsService {
 
       filteredProjects = projects.filter(project => {
 
-        const projectCategoryIds = project.categoryId || [];
+        const projectCategoryIds = project.categoryId ? project.categoryId.split(',') : [];
 
         return categoryIdsForFilter.some(categoryId =>
-          projectCategoryIds.includes(categoryId)
+          projectCategoryIds.indexOf(categoryId) !== -1
         );
       });
     }
