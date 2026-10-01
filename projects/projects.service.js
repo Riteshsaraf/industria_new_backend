@@ -198,7 +198,7 @@ class ProjectsService {
       const projectJson = project.toJSON();
 
       projectJson.category = categories.filter(category =>
-        (project.categoryId || []).includes(category.id)
+        project.categoryId ? project.categoryId.split(',').map(Number).includes(category.id) : false
       );
 
       return projectJson;
