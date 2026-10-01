@@ -139,9 +139,9 @@ class ProjectsService {
 
         const projectCategoryIds = project.categoryId ? project.categoryId.split(',') : [];
 
-        return categoryIdsForFilter.some(categoryId =>
+        return categoryIdsForFilter.filter(categoryId =>
           projectCategoryIds.indexOf(categoryId) !== -1
-        );
+        )?.length ? true : false;
       });
     }
 
