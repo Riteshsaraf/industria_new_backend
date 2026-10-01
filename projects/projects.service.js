@@ -135,11 +135,11 @@ class ProjectsService {
 
     if (categoryIdsForFilter.length) {
 
-      filteredProjects = projects.filter(project => {
+     filteredProjects = projects.filter(project => {
 
-        const projectCategoryIds = project.categoryId?.split(',') || [];
+        const projectCategoryIds = project.categoryId?.split(',').map(Number) || [];
 
-        return categoryIdsForFilter.some((categoryId) =>
+        return categoryIdsForFilter.filter((categoryId) =>
           projectCategoryIds.indexOf(Number(categoryId)) !== -1
         ).length;
       });
