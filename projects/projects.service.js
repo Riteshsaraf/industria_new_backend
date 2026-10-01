@@ -102,7 +102,7 @@ class ProjectsService {
         attributes: ['id']
       });
 
-      categoryIdsForFilter = categories.map(category => category.id);
+      categoryIdsForFilter = categories.map(category => Number(category.id));
 
       // No category found
       if (!categoryIdsForFilter.length) {
@@ -135,14 +135,13 @@ class ProjectsService {
 
     if (categoryIdsForFilter.length) {
 
-      filteredProjects = projects.filter((project) => {
-        const projectCategoryIds = project.categoryId
-          ? project.categoryId.split(',')
-          : [];
+      filteredProjects = projects.filter(project => {
+
+        const projectCategoryIds = project.categoryId?.split(',') || [];
 
         return categoryIdsForFilter.some((categoryId) =>
-          projectCategoryIds.includes(categoryId)
-        );
+          projectCategoryIds.indexOf(Number(categoryId)) !== -1
+        ).length;
       });
     }
 
