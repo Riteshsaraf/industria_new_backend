@@ -54,7 +54,7 @@ class CategoryService {
       ],
       limit,
       offset,
-      order: [['name', 'DESC']]
+      order: [['id', 'ASC']]
     });
 
     return {
