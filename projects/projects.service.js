@@ -135,13 +135,14 @@ class ProjectsService {
 
     if (categoryIdsForFilter.length) {
 
-      filteredProjects = projects.filter(project => {
+      filteredProjects = projects.filter((project) => {
+        const projectCategoryIds = project.categoryId
+          ? project.categoryId.split(',')
+          : [];
 
-        const projectCategoryIds = project.categoryId ? project.categoryId.split(',') : [];
-
-        return categoryIdsForFilter.filter(categoryId =>
-          projectCategoryIds.indexOf(categoryId) !== -1
-        )?.length ? true : false;
+        return categoryIdsForFilter.some((categoryId) =>
+          projectCategoryIds.includes(categoryId)
+        );
       });
     }
 
