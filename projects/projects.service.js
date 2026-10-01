@@ -137,7 +137,7 @@ class ProjectsService {
      
       filteredProjects = projects.filter(project => {
 
-        let projectCategoryIds = project.categoryId?.split(',') || [];
+        let projectCategoryIds = project.categoryId ? project.categoryId.split(',') : [];
         projectCategoryIds = projectCategoryIds.map(Number);
 
         return categoryIdsForFilter.filter((categoryId) =>
